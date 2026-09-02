@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{object.name}}'s page
+{% endblock %}
+
+{% block body %}
+  <h1>{{ object.name }}</h1>
+  {% for field, value in object.get_fields.items %}
+  <p>{{field}}: {{value}}</p>
+  {% endfor %}
+  <div class="div_mystyle">
+  <a href="{% url 'services:service_update' pk=object.pk %}" class="btn">Update</a>
+  <form method="post" action="{% url 'services:service_change_status' pk=object.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn">
+      {% if object.is_active %}
+        Add to archive
+      {% else %}
+        Activate
+      {% endif %}
+    </button>
+  </form>
+  <a href="{% url 'services:service_delete' pk=object.pk %}"class="btn">Delete</a>
+  </div>
+{% endblock %}

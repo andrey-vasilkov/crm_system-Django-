@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Ad companies list
+{% endblock %}
+
+{% block body %}
+<main>
+  <h1>Ad Companies statistic</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>Ad company name</td>
+        <td>Potential clients(count)</td>
+        <td>Active clients(count)</td>
+        <td>Ad budget</td>
+        <td>Sum contracts cost</td>
+        <td>Ratio</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ad in ads %}
+        <tr>
+          <td>
+            {% if perms.ad_companies.view_adcompany %}
+              <a href="{% url 'ads:ad_page' pk=ad.pk %}">{{ ad.name }}</a>
+            {% else %}
+              {{ ad.name }}
+            {% endif %}
+          </td>
+          <td>{{ ad.potential }}</td>
+          <td>{{ ad.active }}</td>
+          <td>{{ ad.budget }}</td>
+          <td>{{ ad.contracts_sum }}</td>
+          <td>{{ ad.ratio }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </main>
+{% endblock %}

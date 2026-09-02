@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Update {{ object.name }}
+{% endblock %}
+
+{% block body %}
+  <h1>{{ object.name }}</h1>
+  <p>
+    <strong>
+    Is the contract really completted?
+    After pressing the button you can't update the contract
+    </strong>
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Yes, close the contract</button>
+    <a href="{% url 'contracts:contract_page' pk=object.pk %}" class="btn">No, back to the profile</a>
+  </form>
+
+{% endblock %}

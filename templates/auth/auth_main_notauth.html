@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Welcome to CRM!!!
+{% endblock %}
+
+{% block header %}
+<header>
+  <div><h1>Welcome to CRM</h1></div>
+ </header>
+{% endblock %}
+
+{% block body %}
+  <h1> You need to authorised </h1>
+  <a href="{% url 'auth:login' %}" style="btn">Login</a>
+{% endblock %}

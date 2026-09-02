@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Potential clients list
+{% endblock %}
+
+{% block body %}
+    <form method="get">
+        <label for="ad_company">Ad companies</label>
+        <select id="ad_company" name="ad_company">
+            <option value="all">all companies</option>
+            {% for company in companies %}
+            <option value={{ company.id }}>{{ company.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="service">Services</label>
+        <select id="service" name="service">
+            <option value="all">All services</option>
+            {% for service in services %}
+                <option value={{ service.id }}>{{ service.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="sort_by">Sort by</label>
+        <select id="sort_by" name="sort_by">
+            <option value="id">Number</option>
+            <option value="last_name">Name</option>
+        </select>
+        <label for="how">How</label>
+        <select id="how" name="how">
+            <option value="asc">Up to down</option>
+            <option value="desc">Down to up</option>
+        </select>
+        <button type="submit" class="btn">Filter</button>
+    </form>
+    <p>Chosen params: {{ chosen_params }}</p>
+    <main>
+        <h1>Clients</h1>
+        <ol class="ol_style">
+        {% for client in object_list  %}
+            {% if object_list %}
+
+                    <li> <h3>{{ client }}</h3>
+                        <p>Ad company: {{ client.ad_company.name }}</p>
+                        <p>Service: {{ client.ad_company.connection.name }}</p>
+                        <a href="{% url 'clients:client_page' pk=client.pk %}" class="btn">Profile</a>
+                    </li>
+            {% endif %}
+        {% empty %}
+            <h2>No clients with these params</h2>
+        {% endfor %}
+        </ol>
+    </main>
+{% endblock %}

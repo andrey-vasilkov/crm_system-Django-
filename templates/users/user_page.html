@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ object.username }}'s page
+{% endblock %}
+
+{% block body %}
+<h2>Name: {{ object.username }}</h2>
+  <ul>
+    <li><h3>Email: {{ object.email }}</h3></li>
+    <li><h3>Self permissions:</h3>
+        <ol>
+          {% for perm in perms %}
+              <li><h4>{{ perm }}</h4></li>
+          {% empty %}
+            <h3>No self permissions</h3>
+          {% endfor %}
+        </ol>
+     </li>
+      <li><h3>Group permissions:</h3>
+          <ul>
+            {% for group in groups %}
+              <h4> Role: {{ group.name }}</h4>
+              <ol>
+              {% for perm in group.permissions.all %}
+              <li><h4>{{ perm.name }}</h4></li>
+              {% empty %}
+                <h4>{{ group.name }} doesn't have any  permissions</h4>
+              {% endfor%}
+              </ol>
+        {% empty %}
+          <h3>No groups</h3>
+        {% endfor %}
+            </ul>
+      </li>
+
+      <li><h3>Created by: {{ object.created_by }}</h3></li>
+      <li><h3>Active: {{ object.is_active }}</h3></li>
+  </ul>
+<div class="div_mystyle_btn">
+    <a href="{% url 'users:user_update' pk=object.pk %}" class="btn">Update profile</a>
+    <form method="post" action="{% url 'users:user_change_status' pk=object.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">
+            {% if object.is_active%}
+                Add to archive
+            {% else %}
+                Activate profile
+            {% endif %}
+        </button>
+    </form>
+</div>
+
+{% endblock %}

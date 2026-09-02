@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Channels list
+{% endblock %}
+
+{% block body %}
+<main>
+  <h1>Channels</h1>
+  {% for channel in object_list %}
+  <div class="div_mystyle">
+    <h3 class="channel_title"><strong>{{ channel.name }}</strong></h3>
+    <form method="post" action="{% url 'ads:delete_channel' pk=channel.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">Delete</button>
+    </form>
+  </div>
+  {% empty %}
+      <h2>No channels yet</h2>
+  {% endfor %}
+</main>
+{% endblock %}

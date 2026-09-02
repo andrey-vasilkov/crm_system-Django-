@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Update {{ object.name }}
+{% endblock %}
+
+{% block body %}
+  <h1>{{ object.name }}</h1>
+  <h2>Nonchangeable fields</h2>
+  <p>Connection: {{ object.connection.name }}</p>
+  <p>Original cost: {{ object.cost }}</p>
+  <p>Start contract date: {{ object.start_date }}</p>
+  <p>Original finish contract date: {{ object.finish_date }}</p>
+  <p>Contract's creator: {{ object.created_by.username }}</p>
+  <p>Contract file:
+    <a href="{{ object.file.url }}" target="_blank">{{ object.get_filename}}</a>
+  </p>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ extra_form.as_p }}
+    <div class="div_mystyle">
+      <button type="submit" class="btn">Update</button>
+      <a href="{% url 'contracts:contract_page' pk=object.pk %}" class="btn">Back to profile</a>
+    </div>
+  </form>
+
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Welcome to CRM!!!
+{% endblock %}
+
+
+{% block body %}
+  <h1 class="h1_mystyle"> Welcome, {{ user }}</h1>
+  <div class="button_div">
+    <a href="{% url 'auth:change_pass' %}" class="btn">Change password</a>
+  </div>
+{% endblock %}

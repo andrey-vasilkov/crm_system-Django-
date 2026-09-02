@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Users list
+{% endblock %}
+
+{% block body %}
+    <form method="get">
+        <label for="status">Satus</label>
+        <select id="status" name="status">
+            <option value="all">all status</option>
+            <option value="1">active</option>
+            <option value="0">archived</option>
+        </select>
+        <label for="role">Roles</label>
+        <select id="role" name="role">
+            <option value="all">all groups</option>
+            {% for group in groups %}
+            <option value={{ group.id }}>{{ group.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn">Filter</button>
+    </form>
+    <p>Choosen params: {{ choosen_params }}</p>
+    <main>
+        {% for status, users in users_status.items %}
+            {% if users %}
+                <h2>{{ status }}</h2>
+                  <ol class="ol_style">
+                        {% for user in users %}
+                        <li> <h3>{{ user.username }}</h3>
+                            <ul>
+                                <h4> Roles </h4>
+                                {% for group in user.groups.all %}
+                                  <li>{{ group }}</li>
+                               {% empty %}
+                                  {% if user.is_superuser %}
+                                    <li>{{ user.username }} is superuser </li>
+                                  {% else %}
+                                    <li>{{ user.username }} doesn't have any roles </li>
+                                  {% endif %}
+                              {% endfor %}
+                            </ul>
+                            <a href="{% url 'users:user_page' pk=user.pk %}" class="btn">Profile</a>
+                        </li>
+                        {% endfor %}
+                   </ol>
+            {% endif %}
+        {% endfor %}
+    </main>
+{% endblock %}

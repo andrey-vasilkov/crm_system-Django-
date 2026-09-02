@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body>
+{% block header %}
+<header>
+    {% block buttons %}
+        {% if buttons.keys|length > 4 %}
+            <div>
+                <div class="div_mystyle">
+                <label for="menu" class="label_style">Menu</label>
+                <select id="menu" name="menu" onchange="location=this.value">
+                    <option value="">Select page</option>
+                    {% for label, name in buttons.items %}
+                        <option value="{% url name %}" class="btn">{{label}}</option>
+                    {% empty %}
+                        <h2> You don't have enough permissions </h2>
+                    {% endfor %}
+                </select>
+                 </div>
+            </div>
+        {% else %}
+            <div class="div_mystyle">
+                {% for label, name in buttons.items %}
+                    <a href="{% url name %}" class="btn">{{ label }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock %}
+        <div><h1>CRM system</h1></div>
+        <div>
+            <a href="{% url 'ads:ads_statistic' %}" class="btn">Statistic</a>
+            <a href="{% url 'auth:main' %}" class="btn"> Back to main page</a>
+            <a href="{% url 'auth:logout' %}" class="btn">Logout</a>
+        </div>
+</header>
+{% endblock %}
+<main>
+    {% block body %}
+    {% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Services list
+{% endblock %}
+
+{% block body %}
+<main>
+  <form method="get">
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="all">all status</option>
+      <option value="1">active</option>
+      <option value="0">archived</option>
+    </select>
+    <label for="creator">Select creator</label>
+    <select name="creator" id="creator">
+        <option value="all" >all creators</option>
+      {% for creator in creators %}
+        <option value={{ creator.id }}>{{ creator }}</option>
+      {% endfor %}
+    </select>
+    <label for="sort by">sort by</label>
+    <select name="sort_by" id="sort by">
+      <option value="name" {% if request.GET.sort_by == "name" %}selected{% endif %}>Name</option>
+      <option value="price" {% if request.GET.sort_by == "price" %}selected{% endif %}>Price</option>
+      <option value="created_by" {% if request.GET.sort_by == "created_by" %}selected{% endif %}>Creator</option>
+    </select>
+    <label for="how">select type of sorting</label>
+    <select name="how" id="how">
+      <option value="asc" {% if request.GET.how == "asc" %} selected {% endif%}>Up to down</option>
+      <option value="desc" {% if request.GET.how == "desc" %} selected {% endif%}>Down to up</option>
+    </select>
+    <button type="submit" class="btn">Sort</button>
+  </form>
+  <p>Choosen params: {{ choosen_params }}</p>
+  <h1>Services</h1>
+  {% for class, services in status.items %}
+    {% if services %}
+        <h2> {{ class }}</h2>
+        <ol class="ol_style">
+            {% for service in services %}
+            <li>
+              <h3>{{ service.name }}</h3>
+                <ul>
+                  <li>Description: {{ service.description }}</li>
+                  <li>Price: {{ service.price }}</li>
+                  <li>Creator: {{ service.created_by }}</li>
+                  <br>
+                  <a href="{% url 'services:service_page' pk=service.pk %}" class="btn">Profile</a>
+                  <a href="{% url 'services:service_delete' pk=service.pk%}" class="btn">Delete</a>
+                </ul>
+            </li>
+            {% endfor %}
+      </ol>
+    {% endif %}
+  {% empty %}
+      <h2>No services yet</h2></ol>
+  {% endfor %}
+  </main>
+{% endblock %}

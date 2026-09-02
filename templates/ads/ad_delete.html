@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Delete {{ object.name }}
+{% endblock %}
+
+{% block body %}
+  <h2>Do you really want to delete ad company: {{ object.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Delete</button>
+  </form>
+  <div>
+    <a href="{% url 'ads:ad_page' pk=object.pk%}" class="btn">To ad company page</a>
+    <p>  </p>
+    <a href="{% url 'ads:ads_list' %}" class="btn">To ad companies list</a>
+  </div>
+{% endblock %}

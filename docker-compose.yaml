@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:18
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${dbname}
+      POSTGRES_USER: ${user}
+      POSTGRES_PASSWORD: ${password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata18:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${user} -d ${dbname}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      host: db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./media:/app/media
+      - ./static:/app/static
+
+volumes:
+  pgdata18:

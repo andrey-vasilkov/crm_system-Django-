@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Welcome to CRM!!!
+{% endblock %}
+
+{% block header %}
+<header>
+  <div><h1>Welcome to CRM</h1></div>
+ </header>
+{% endblock %}
+{% block body %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+{% endblock %}

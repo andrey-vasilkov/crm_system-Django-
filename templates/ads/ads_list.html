@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Ad companies list
+{% endblock %}
+
+{% block body %}
+<main>
+  <form method="get">
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="all">all status</option>
+      <option value="1">active</option>
+      <option value="0">archived</option>
+    </select>
+    <label for="service">Select service</label>
+    <select name="service" id="service">
+        <option value="all" >all services</option>
+      {% for service in services %}
+        <option value={{ service.id }}>{{ service }}</option>
+      {% endfor %}
+    </select>
+    <label for="channel">Select channel</label>
+    <select name="channel" id="channel">
+        <option value="all" >all channels</option>
+      {% for channel in channels %}
+        <option value={{ channel.id }}>{{ channel }}</option>
+      {% endfor %}
+    </select>
+    <label for="creator">Select creator</label>
+    <select name="creator" id="creator">
+        <option value="all" >all creators</option>
+      {% for creator in creators %}
+        <option value={{ creator.id }}>{{ creator }}</option>
+      {% endfor %}
+    </select>
+    <label for="sort_by">sort by</label>
+    <select name="sort_by" id="sort_by">
+      <option value="name" {% if request.GET.sort_by == "name" %}selected{% endif %}>Name</option>
+      <option value="budget" {% if request.GET.sort_by == "budget" %}selected{% endif %}>Budget</option>
+      <option value="created_by" {% if request.GET.sort_by == "created_by" %}selected{% endif %}>Creator</option>
+    </select>
+    <label for="how">select type of sorting</label>
+    <select name="how" id="how">
+      <option value="asc" {% if request.GET.how == "asc" %} selected {% endif%}>Up to down</option>
+      <option value="desc" {% if request.GET.how == "desc" %} selected {% endif%}>Down to up</option>
+    </select>
+    <button type="submit" class="btn">Sort</button>
+  </form>
+  <p>Chosen params: {{ choosen_params }}</p>
+  <h1>Ad Companies</h1>
+  {% for class, companies in status.items %}
+    {% if companies %}
+        <h2> {{ class }}</h2>
+        <ol class="ol_style">
+            {% for company in companies %}
+            <li>
+              <h3>{{ company.name }}</h3>
+                <ul>
+                  <li>Budget: {{ company.budget }}</li>
+                  <li>Connected service: {{ company.connection }}</li>
+                  <li>Channels: {{ company.get_channels }}</li>
+                  <br>
+                  <a href="{% url 'ads:ad_page' pk=company.pk %}" class="btn">Profile</a>
+                  <a href="{% url 'ads:ad_delete' pk=company.pk %}" class="btn">Delete</a>
+                </ul>
+            </li>
+            {% endfor %}
+      </ol>
+    {% endif %}
+  {% empty %}
+      <h2>No services yet</h2></ol>
+  {% endfor %}
+  </main>
+{% endblock %}

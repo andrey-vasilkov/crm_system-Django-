@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Update {{ object.name }}
+{% endblock %}
+
+{% block body %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="div_mystyle">
+      <button type="submit" class="btn">Update</button>
+      <a href="{% url 'services:service_page' pk=object.pk %}" class="btn">Back to profile</a>
+    </div>
+  </form>
+
+{% endblock %}

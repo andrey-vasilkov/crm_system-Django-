@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{object.name}}'s page
+{% endblock %}
+
+{% block body %}
+  <h1>{{ object.name }}</h1>
+  <p>Service:
+    {% if user.is_superuser or perms.services.view_service %}
+      <a href="{% url 'services:service_page' pk=object.connection.pk %}">{{ object.connection.name }}</a>
+    {% else %}
+      {{ object.connection.name }}
+    {% endif %}
+  </p>
+  <p>Cost: {{object.agreed_cost}}</p>
+  <p>Start date: {{object.start_date}}</p>
+  <p>Planned finish date: {{object.agreed_finish_date}}</p>
+  <p>Contract file: <a href="{{ object.file.url }}" target="_blank">{{ object.get_filename }}</a></p>
+  {% if extra_files %}
+    <p>Extra files:
+      <ul>
+        {% for file in extra_files %}
+          <li><a href="{{ file.file.url }}" target="_blank">{{ file.get_filename }}</a> </li>
+        {% endfor %}
+      </ul>
+    </p>
+  {% endif %}
+  {% if object.is_finished %}
+    <h2>Contract is completed</h2>
+  {% else %}
+    <div class="div_mystyle">
+    <a href="{% url 'contracts:update_contract' pk=object.pk %}" class="btn">Update</a>
+    <a href="{% url 'contracts:close_contract' pk=object.pk %}" class="btn">Close contract</a>
+    </div>
+  {% endif %}
+{% endblock %}

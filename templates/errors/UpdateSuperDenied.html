@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Errors!!!!
+{% endblock %}
+
+{% block body %}
+    <h1><strong>403 Forbidden</strong></h1>
+    <h2>{{ error }}</h2>
+    <a href="{% url 'auth:main' %}">Back to main page</a>
+{% endblock %}

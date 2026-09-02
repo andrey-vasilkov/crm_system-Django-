@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Services list
+{% endblock %}
+
+{% block body %}
+<main>
+  <form method="get">
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="all">all status</option>
+      <option value="1">completed</option>
+      <option value="0">in process</option>
+    </select>
+    <label for="connection">Service</label>
+    <select id="connection" name="connection">
+      <option value="all">All services</option>
+      {% for service in services %}
+        <option value={{ service.id }}>{{ service.name }}</option>
+      {% endfor %}
+    </select>
+    <label for="creator">Select creator</label>
+    <select name="creator" id="creator">
+        <option value="all" >all creators</option>
+      {% for creator in creators %}
+        <option value={{ creator.id }}>{{ creator }}</option>
+      {% endfor %}
+    </select>
+    <label for="sort_by">sort by</label>
+    <select name="sort_by" id="sort_by">
+      <option value="name" {% if request.GET.sort_by == "name" %}selected{% endif %}>Name</option>
+      <option value="cost" {% if request.GET.sort_by == "cost" %}selected{% endif %}>Cost</option>
+      <option value="creator" {% if request.GET.sort_by == "created_by" %}selected{% endif %}>Creator</option>
+    </select>
+    <label for="how">select type of sorting</label>
+    <select name="how" id="how">
+      <option value="asc" {% if request.GET.how == "asc" %} selected {% endif%}>Up to down</option>
+      <option value="desc" {% if request.GET.how == "desc" %} selected {% endif%}>Down to up</option>
+    </select>
+    <button type="submit" class="btn">Sort</button>
+  </form>
+  <p>Chosen params: {{ chosen_params }}</p>
+  <h1>Contracts</h1>
+  {% for class, contracts in status.items %}
+    {% if contracts %}
+        <h2> {{ class }}</h2>
+        <ol class="ol_style">
+            {% for contract in contracts %}
+            <li>
+              <h3>{{ contract.name }}</h3>
+                <ul>
+                  <li>Service: {{ contract.connection.name }}</li>
+                  <li>Cost: {{ contract.agreed_cost }}</li>
+                  <li>Planned finish date: {{ contract.agreed_finish_date }}</li>
+                  <br>
+                  <a href="{% url 'contracts:contract_page' pk=contract.pk %}" class="btn">Profile</a>
+                </ul>
+            </li>
+            {% endfor %}
+      </ol>
+    {% endif %}
+  {% empty %}
+      <h2>No contracts yet</h2></ol>
+  {% endfor %}
+  </main>
+{% endblock %}

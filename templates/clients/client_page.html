@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ object.full_name }}'s page
+{% endblock %}
+
+{% block body %}
+<h1>Profile of {% if active %}active{% else %}potential{% endif %} client</h1>
+<h2>Name: {{ object }}</h2>
+  <ul>
+    <li><h3>Email: {{ object.email }}</h3></li>
+    <li><h3>Phone: {{ object.phone }}</h3></li>
+    <li><h3>Ad company: {{ object.ad_company.name }}</h3></li>
+    <li><h3>Service: {{ object.ad_company.connection.name }}</h3></li>
+      {% if active %}
+      <li>
+          <h3>Contract: {{ active.contract.name }}</h3>
+        <ul>
+            <li>Start date : {{ active.contract.start_date }}</li>
+            <li>Finish date : {{ active.contract.agreed_finish_date }}</li>
+            <li>Cost : {{ active.contract.agreed_cost }}</li>
+            <li>Url : <a href={{ active.contract.file.url }} target="_blank">{{ active.contract}}</a></li>
+        </ul>
+       </li>
+       <li><h3>Contract status: {% if active.contract.is_finished %}Completed{% else %}InProcess{% endif %} </h3></li>
+
+        {% endif %}
+
+  </ul>
+<div class="div_mystyle_btn">
+    {% if is_super or can_change_potential %}
+        <a href="{% url 'clients:client_update' pk=object.pk %}" class="btn">Update profile</a>
+    {% endif %}
+    {% if not active %}
+        {% if is_super or can_change_active %}
+        <a href="{% url 'clients:create_active_client_from_potential' pk=object.pk %}" class="btn">Create active client</a>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}

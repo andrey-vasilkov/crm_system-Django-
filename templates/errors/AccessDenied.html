@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Errors!!!!
+{% endblock %}
+
+{% block body %}
+    <h1><strong>403 Forbidden</strong></h1>
+    <h2>{{ error }}</h2>
+    <div>you have: {{ perms }}</div>
+    <div>you need: {{ req }}</div>
+
+{% endblock %}

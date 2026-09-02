@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+ Create active client
+{% endblock %}
+
+{% block body %}
+
+  <div><h2>Create active client</h2></div>
+  <div><form method="post">
+      {% if client %}
+        <h2>Potential client: {{ client }}</h2>
+      {% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Create</button>
+  </form></div>
+  <br>
+<br>
+<br>
+  <div>
+    {% if client %}
+     <a href="{% url 'clients:client_page' pk=client.pk %}" class="btn">Back to profile </a>
+    {% endif %}
+      <a href="{% url 'clients:clients_list' %}" class="btn">To clients list</a>
+   </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{object.name}}'s page
+{% endblock %}
+
+{% block body %}
+  <h1>{{ object.name }}</h1>
+  <div class="div_myclass">
+    <p>Connection:
+      {% if user.is_superuser or perms.user.services.view_service %}
+        <a href="{% url 'services:service_page' pk=object.connection.pk %}">{{ object.connection }}</a>
+      {% else %}
+        {{ object.connection }}
+      {% endif %}
+    </p>
+    <p>
+      Channels:
+        <ul>
+          {% for channel in object.channel.all %}
+            <li>{{ channel.name }}</li>
+          {% endfor %}
+        </ul>
+    </p>
+    <p>Budget: {{ object.budget }}</p>
+   </div>
+  <div class="div_mystyle">
+  <a href="{% url 'ads:ad_update' pk=object.pk %}" class="btn">Update</a>
+  <form method="post" action="{% url 'ads:ad_change_status' pk=object.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn">
+      {% if object.is_active %}
+        Add to archive
+      {% else %}
+        Activate
+      {% endif %}
+    </button>
+  </form>
+  <a href="{% url 'ads:ad_delete' pk=object.pk %}"class="btn">Delete</a>
+  </div>
+{% endblock %}
