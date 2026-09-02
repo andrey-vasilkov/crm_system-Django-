@@ -9,7 +9,7 @@ class User(AbstractUser):
                                       related_name="user_creator",
                                       blank=True,
                                       null=True)
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions = [
             ("users_list_view","Can view users list"),
         ]

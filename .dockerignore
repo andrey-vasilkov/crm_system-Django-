@@ -8,6 +8,7 @@ staticfiles
 static
 .pylintrc
 TODO.md
+my_changes.md
 __pycache__/
 *.pyc
 *.sqlite3

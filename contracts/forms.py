@@ -57,8 +57,8 @@ class ContractValidateUpdateForm(ModelForm):
         if finish_date is None:
             return finish_date
         if finish_date < self.instance.agreed_finish_date:
-            raise ValidationError(f"""New finish date must be later than 
-{self.instance.agreed_finish_date}""")
+            raise ValidationError(f"New finish date must be later than "
+                                  f"{self.instance.agreed_finish_date}")
         return finish_date
 
 class ContractUploadExtraFilesForm(ModelForm):

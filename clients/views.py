@@ -5,11 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
 
-from ad_companies.models import AdCompany
 from clients.forms import ValidateCreatePotentialClient, ValidateUpdatePotentialClient
-from common_files.mixins import CheckAccessMixin
-from clients.models import PotentialClient, ActiveClient
 from clients.mixins import ClientsSortAndFilter
+from clients.models import PotentialClient, ActiveClient
+from common_files.mixins import CheckAccessMixin
 from contracts.models import Contract
 from logging_setup import logger
 
@@ -34,6 +33,7 @@ class AllClientsListView(CheckAccessMixin,ClientsSortAndFilter,ListView):
     model = PotentialClient
 
     def get_extra_param(self):
+        """return extra param needed for template choice and user perms"""
         user_perms=self.request.user.get_all_permissions()
         if self.request.user.is_superuser or "clients.view_all_clients_list" in user_perms:
             extra_param="all_clients"
@@ -48,22 +48,18 @@ class AllClientsListView(CheckAccessMixin,ClientsSortAndFilter,ListView):
     def get_template_names(self):
         extra_param, _=self.get_extra_param()
         if extra_param == "all_clients":
-            template_name = "clients/all_clients_list.html"
-            return template_name
-        elif extra_param == "potential_clients":
-            template_name = "clients/potential_clients_list.html"
-            return template_name
-        else:
-            template_name="errors/AccessDenied.html"
-            return template_name
+            return "clients/all_clients_list.html"
+        if extra_param == "potential_clients":
+            return "clients/potential_clients_list.html"
+        return "errors/AccessDenied.html"
 
 
-    def get_queryset(self):
-        queryset=super().get_queryset()
+    def get_queryset(self, *args, **kwargs):
+        queryset=super().get_queryset(*args, **kwargs)
         queryset=queryset.select_related("active_client","ad_company__connection").all()
         return queryset
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args, **kwargs): #pylint: disable=R0914
         extra_param, user_perms =self.get_extra_param()
         if extra_param == "error":
             error = "You don't have enough permissions"
@@ -78,15 +74,15 @@ class AllClientsListView(CheckAccessMixin,ClientsSortAndFilter,ListView):
             }
             return context
 
+        # pylint: disable=W0201
         context=super().get_context_data(*args,**kwargs)
         all_potential_clients_list=context["object_list"]
         context["status"]={"Potential clients":[],
                            "Active clients":[]}
         for client in all_potential_clients_list:
-            try:
-                active = client.active_client
+            if hasattr(client, "active_client"):
                 context["status"]["Active clients"].append(client)
-            except ActiveClient.DoesNotExist:
+            else:
                 context["status"]["Potential clients"].append(client)
 
         if extra_param == "potential_clients":
@@ -107,7 +103,8 @@ class AllClientsListView(CheckAccessMixin,ClientsSortAndFilter,ListView):
         else:
             service = self.all_services.filter(pk=int(self.service)).first()
             chosen_service = service.name if service else "all"
-        chosen_params=(f"Status: {"clients" if extra_param=="potential_clients" else self.status}, "
+        chosen_status="clients" if extra_param=="potential_clients" else self.status
+        chosen_params=(f"Status: {chosen_status}, "
                        f"Ad company: {chosen_company},"
                        f"Service: {chosen_service}, "
                        f"Sort by: {self.sort_by_context}, "
@@ -125,8 +122,10 @@ class ClientPageView(CheckAccessMixin,DetailView):
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        context["active"]=ActiveClient.objects.filter(client=self.object.pk).first()
-        context["can_change_potential"] = self.request.user.has_perm("clients.change_potentialclient")
+        context["active"]=ActiveClient.objects.filter( #pylint: disable=E1101
+            client=self.object.pk).first()
+        context["can_change_potential"] = \
+            self.request.user.has_perm("clients.change_potentialclient")
         context["can_change_active"] = self.request.user.has_perm("clients.change_activeclient")
         context["is_super"]=self.request.user.is_superuser
         return context
@@ -151,6 +150,7 @@ class CreateActiveClientView(CheckAccessMixin, CreateView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args,**kwargs)
+        # pylint: disable=W0201
         self.client = self.get_potential_client()
 
 
@@ -162,11 +162,13 @@ class CreateActiveClientView(CheckAccessMixin, CreateView):
         return response
 
     def get_potential_client(self):
+        """return potential client from url pk or None"""
         potential_client_pk=self.kwargs.get("pk")
         try:
-            potential_client=PotentialClient.objects.filter(pk=potential_client_pk).first()
+            potential_client=PotentialClient.objects.filter( #pylint: disable=E1101
+                pk=potential_client_pk).first()
             return potential_client
-        except PotentialClient.DoesNotExist:
+        except PotentialClient.DoesNotExist: #pylint: disable=E1101
             return None
 
     def get_context_data(self, **kwargs):
@@ -178,19 +180,21 @@ class CreateActiveClientView(CheckAccessMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        actives = ActiveClient.objects.all()
+        actives = ActiveClient.objects.all() #pylint: disable=E1101
         exclude_contracts = [active.contract.pk for active in actives]
         if self.client:
             form.fields["client"].widget = forms.HiddenInput()
             form.fields["client"].initial=self.client
-            form.fields["contract"].queryset = (Contract.objects.
-                                                filter(connection=self.client.ad_company.connection).
+            form.fields["contract"].queryset = (Contract.objects. #pylint: disable=E1101
+                                                filter(
+                                                    connection=self.client.ad_company.connection).
                                                 exclude(pk__in=exclude_contracts).
                                                 all())
         else:
             exclude_pk=[active.client.pk for active in actives ]
-            form.fields["client"].queryset=PotentialClient.objects.exclude(pk__in=exclude_pk).all()
-            form.fields["contract"].queryset = (Contract.objects.
+            form.fields["client"].queryset=PotentialClient.objects.exclude( #pylint: disable=E1101
+                pk__in=exclude_pk).all()
+            form.fields["contract"].queryset = (Contract.objects. #pylint: disable=E1101
                                                 exclude(pk__in=exclude_contracts).
                                                 all())
 
@@ -198,15 +202,6 @@ class CreateActiveClientView(CheckAccessMixin, CreateView):
 
     def form_valid(self, form):
         response=super().form_valid(form)
-        logger.info(f"{self.request.user.username} make active client: {self.object.client.full_name()}")
+        logger.info(f"""{self.request.user.username} make active client:
+{self.object.client.full_name()}""")
         return response
-
-
-
-
-
-
-
-
-
-

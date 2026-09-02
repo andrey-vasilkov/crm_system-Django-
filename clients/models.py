@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.conf import settings
+
 from ad_companies.models import AdCompany
 from contracts.models import Contract
 
@@ -8,6 +9,7 @@ from contracts.models import Contract
 # Create your models here.
 
 class PotentialClient(models.Model):
+    """data of potential (not active) client"""
     last_name = models.CharField(verbose_name="Surname",
                             max_length=20,
                             null=False,
@@ -43,7 +45,7 @@ class PotentialClient(models.Model):
                                       blank=False,
                                       auto_now_add=True)
 
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions=[
             ("view_clients_list","Can view clients list"),
         ]
@@ -54,12 +56,13 @@ class PotentialClient(models.Model):
         full_name=" ".join(all_names)
         return full_name
 
-    def full_name(self):
-        return self.__str__()
+    def full_name(self): #pylint: disable=C0116
+        return str(self)
 
 
 
 class ActiveClient(models.Model):
+    """data of active client with contract"""
     client=models.OneToOneField(verbose_name="Client",
                                 to=PotentialClient,
                                 on_delete=models.PROTECT,
@@ -83,13 +86,12 @@ class ActiveClient(models.Model):
                                       auto_now_add=True)
 
 
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions = [
             ("view_all_clients_list", "can view all clients list"),
         ]
     def __str__(self):
         return str(self.client)
 
-    def full_name(self):
-        return self.__str__()
-
+    def full_name(self): #pylint: disable=C0116
+        return str(self)

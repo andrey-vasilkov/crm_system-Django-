@@ -7,14 +7,16 @@ from clients.models import PotentialClient,ActiveClient
 
 @admin.register(PotentialClient)
 class PotentialClientAdmin(admin.ModelAdmin):
+    """Admin view for PotentialClient"""
     list_display = ["full_name", "ad_company_profile"]
     search_fields = ["last_name","first_name", "ad_company__name"]
 
-    def ad_company_profile(self, object):
-        if object.ad_company is None:
+    def ad_company_profile(self, profile): #pylint: disable=C0116
+        if profile.ad_company is None:
             return "-"
-        url = reverse("admin:ad_companies_adcompany_change", kwargs={"object_id":object.ad_company.pk})
-        return mark_safe(f'<a href="{url}">{object.ad_company.name}</a>')
+        url = reverse("admin:ad_companies_adcompany_change",
+                      kwargs={"object_id":profile.ad_company.pk})
+        return mark_safe(f'<a href="{url}">{profile.ad_company.name}</a>')
 
     ad_company_profile.short_description="Compaign"
 
@@ -22,13 +24,15 @@ class PotentialClientAdmin(admin.ModelAdmin):
 
 @admin.register(ActiveClient)
 class ActiveClientAdmin(admin.ModelAdmin):
+    """Admin view for ActiveClient"""
     list_display = ["full_name", "contract_profile"]
     search_fields = ["client__last_name", "client__first_name"]
 
-    def contract_profile(self, object):
-        if object.contract is None:
+    def contract_profile(self, profile): #pylint: disable=C0116
+        if profile.contract is None:
             return "-"
-        url = reverse("admin:contracts_contract_change", kwargs={"object_id":object.contract.pk})
-        return mark_safe(f'<a href="{url}">{object.contract.name}</a>')
+        url = reverse("admin:contracts_contract_change",
+                      kwargs={"object_id":profile.contract.pk})
+        return mark_safe(f'<a href="{url}">{profile.contract.name}</a>')
 
     contract_profile.short_description="Contract"

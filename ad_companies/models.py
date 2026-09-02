@@ -1,28 +1,31 @@
-from django.db import models
-from django.core.validators import MinValueValidator
-from services.models import Service
 from django.conf import settings
+from django.core.validators import MinValueValidator
+from django.db import models
+
+from services.models import Service
 
 
 # Create your models here.
 
 class Channel(models.Model):
+    """Channel of distribution"""
     name=models.CharField(verbose_name="Channel",
                           unique=True,
                           max_length=20,
                           null=False,
                           blank=False)
 
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions = [
             ("view_channels_list", "Can view channels list"),
         ]
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class AdCompany(models.Model):
+    """data of ad company"""
 
 
     name=models.CharField(verbose_name="Name",
@@ -65,7 +68,7 @@ class AdCompany(models.Model):
                                     null=False,
                                     blank=False)
 
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         verbose_name="Ad Company"
         verbose_name_plural="Ad Companies"
         permissions = [
@@ -73,14 +76,15 @@ class AdCompany(models.Model):
         ]
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
-    def get_channels(self):
-        channels=",".join([channel.name for channel in self.channel.all()])
+    def get_channels(self): #pylint: disable=C0116
+        channels=",".join([channel.name for channel in self.channel.all()]) #pylint: disable=E1101
         return channels
 
     get_channels.short_description="Channels"
 
-    def get_fields(self):
-        fields = {field.verbose_name: getattr(self, field.name) for field in self._meta.fields}
+    def get_fields(self): #pylint: disable=C0116
+        fields = {field.verbose_name: getattr(self, field.name)
+                  for field in self._meta.fields} #pylint: disable=E1101
         return fields

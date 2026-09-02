@@ -4,7 +4,7 @@ from contracts.views import (ContractCreateView,
                              ContractDetailView,
                              ContractUpdateView,
                              CloseContractView,)
-app_name = "contracts"
+app_name = "contracts" #pylint: disable=C0103
 
 urlpatterns = [
     path("", ContractListView.as_view(), name="contracts_list"),

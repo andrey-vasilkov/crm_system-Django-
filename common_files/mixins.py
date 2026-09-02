@@ -9,22 +9,23 @@ from logging_setup import logger
 class CheckSuperUser(AccessMixin):
     """Check is profile belonging to superuser"""
     def dispatch(self, request, *args, **kwargs):
+        """deny updating superuser's profile by non-superuser"""
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         if request.user.is_superuser:
-            return super().dispatch(request, *args, **kwargs)
-        object=self.get_object()
-        if object.is_superuser:
-            logger.warning(f"""{request.user.username} try to update {object.username}'s profile.
-But {object.username} is superuser. Not enough permissions""")
-            error = f"You can't update {object.username}'s profile"
+            return super().dispatch(request, *args, **kwargs) #pylint: disable=E1101
+        profile=self.get_object() #pylint: disable=E1101
+        if profile.is_superuser:
+            logger.warning(f"""{request.user.username} try to update {profile.username}'s profile.
+But {profile.username} is superuser. Not enough permissions""")
+            error = f"You can't update {profile.username}'s profile"
             context = {
                 "error":error,
             }
             return render(request,
                           "errors/UpdateSuperDenied.html",
                           context=context)
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs) #pylint: disable=E1101
 
 class CheckAccessMixin(AccessMixin):
     """Check user's permissions to visit page"""
@@ -32,6 +33,7 @@ class CheckAccessMixin(AccessMixin):
     login_url = "auth:login"
 
     def dispatch(self, request, *args, **kwargs):
+        """check permissions and allow or deny access"""
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         if request.user.is_superuser:
@@ -51,9 +53,10 @@ class CheckAccessMixin(AccessMixin):
         response=render(request,"errors/AccessDenied.html", context=context)
         return response
 
-class SortAndFilterMixin:
-
+class SortAndFilterMixin: #pylint: disable=R0902,R0903
+    """Sort and filter list by parameters"""
     def get_queryset(self):
+        """return sorted and filtered queryset"""
         queryset=super().get_queryset()
         self.default_sort_name="id"
         self.default_sort_how="asc"
@@ -90,7 +93,8 @@ class SortAndFilterMixin:
         else:
             self.role="all"
         if self.sort_by in self.allowed_names and self.how in self.allowed_how:
-            queryset = queryset.order_by(self.sort_by) if self.how=="asc" else queryset.order_by(f"-{self.sort_by}")
+            queryset = queryset.order_by(self.sort_by) if self.how=="asc" \
+                else queryset.order_by(f"-{self.sort_by}")
             return queryset
         queryset = queryset.order_by(self.default_sort_name)
 

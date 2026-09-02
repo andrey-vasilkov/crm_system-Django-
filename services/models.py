@@ -42,7 +42,7 @@ class Service(models.Model):
                                 auto_now=True)
     is_active=models.BooleanField(verbose_name="active",
                                   default=True)
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions = [
             ("services_list_view","Can view services list"),
         ]

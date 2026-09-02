@@ -1,13 +1,12 @@
-from django.contrib.admindocs.views import extract_views_from_urlpatterns
-from django.core.exceptions import ValidationError
-from django.db import connection
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
-from contracts.models import Contract, ExtraFilesToContract
-from contracts.forms import ContractValidateForm, ContractValidateUpdateForm, ContractUploadExtraFilesForm
-from common_files.mixins import CheckAccessMixin
+from contracts.forms import (ContractValidateForm, #pylint: disable=C0301
+                             ContractValidateUpdateForm,
+                             ContractUploadExtraFilesForm)
 from contracts.mixins import SortAndFilterContracts
+from contracts.models import Contract, ExtraFilesToContract
+from common_files.mixins import CheckAccessMixin
 from logging_setup import logger
 
 # Create your views here.
@@ -28,6 +27,7 @@ class ContractCreateView(CheckAccessMixin,CreateView):
         return response
 
 class ContractListView(CheckAccessMixin,SortAndFilterContracts,ListView):
+    """Show list of contracts"""
     model = Contract
     required_perm = "contracts.view_contracts_list"
     template_name = "contracts/contract_list.html"
@@ -36,12 +36,12 @@ class ContractListView(CheckAccessMixin,SortAndFilterContracts,ListView):
         context = super().get_context_data(*args, **kwargs)
         context["status"]={"processing":[],
                            "completed":[]}
-        for object in context["object_list"]:
-            if object.is_finished:
-                context["status"]["completed"].append(object)
+        for contract in context["object_list"]:
+            if contract.is_finished:
+                context["status"]["completed"].append(contract)
             else:
-                context["status"]["processing"].append(object)
-        services = set([contract.connection for contract in self.contracts ])
+                context["status"]["processing"].append(contract)
+        services = {contract.connection for contract in self.contracts}
         context["services"]=services
         if self.service == "all":
             chosen_service=self.service
@@ -71,7 +71,7 @@ class ContractDetailView(CheckAccessMixin,DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        extra_files = ExtraFilesToContract.objects.filter(contract=self.object.pk)
+        extra_files = ExtraFilesToContract.objects.filter(contract=self.object.pk) #pylint: disable=E1101
         context["extra_files"]=extra_files
         return context
 
@@ -83,12 +83,12 @@ class ContractUpdateView(CheckAccessMixin,UpdateView):
     form_class = ContractValidateUpdateForm
     extra_form_class=ContractUploadExtraFilesForm
 
-    def get_form(self, form_class=form_class):
+    def get_form(self, form_class=form_class): #pylint: disable=C0116
         if self.request.POST:
             return form_class(self.request.POST, instance=self.object)
         return form_class
 
-    def get_extra_form(self, form_class=extra_form_class):
+    def get_extra_form(self, form_class=extra_form_class): #pylint: disable=C0116
         if self.request.POST:
             return form_class(self.request.POST, self.request.FILES)
         return form_class
@@ -102,7 +102,7 @@ class ContractUpdateView(CheckAccessMixin,UpdateView):
 
 
     def post(self, request, *args,**kwargs):
-        self.object=self.get_object()
+        self.object=self.get_object() #pylint: disable=W0201
         main_form=self.get_form()
         extra_form=self.get_extra_form()
         if main_form.is_valid() and extra_form.is_valid():
@@ -113,14 +113,15 @@ class ContractUpdateView(CheckAccessMixin,UpdateView):
         response = reverse_lazy("contracts:contract_page", kwargs={"pk":self.object.pk})
         return response
 
-    def form_valid(self, main_form, extra_form):
+    def form_valid(self, main_form, extra_form): #pylint: disable=W0221
+        #pylint: disable=W0201
         extra_form.instance.contract=self.object
         self.object=main_form.save()
         extra_form.save()
         logger.info(f"{self.request.user.username} update {self.object.name}")
         return redirect(self.get_success_url())
 
-    def form_invalid(self, main_form, extra_form):
+    def form_invalid(self, main_form, extra_form): #pylint: disable=W0221
         return self.render_to_response(
             context=self.get_context_data(
                 form=main_form,
@@ -142,6 +143,3 @@ class CloseContractView(CheckAccessMixin,UpdateView):
         response = super().form_valid(form)
         logger.info(f"{self.request.user.username} close the contract {self.object.name}")
         return response
-
-
-

@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-from dotenv import load_dotenv
-from pathlib import Path
 from os import getenv
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -32,7 +33,7 @@ if secret_key is None:
     raise ValueError("You need your secret key in .env")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-debug_param=getenv("debug", 0)
+debug_param=getenv("debug", "0")
 debug=False
 if debug_param =="1":
     debug=True
@@ -99,7 +100,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 database_path=BASE_DIR/"database"
 Path(database_path).mkdir(exist_ok=True)
 
-DATABASES = {
+DATABASES = { #pylint: disable=C0103
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": database_path / "db.sqlite3",
@@ -118,7 +119,7 @@ DATABASES = {
 
 database_name=getenv("database", "default")
 
-DATABASES={"default":DATABASES[database_name]}
+DATABASES={"default":DATABASES[database_name]} #pylint: disable=C0103
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
@@ -157,7 +158,7 @@ static_dir=getenv("static_dir", "static")
 STATIC_URL = "static/"
 static_dir=BASE_DIR/static_dir
 Path(static_dir).mkdir(exist_ok=True)
-STATICFILES_DIRS = static_dir,
+STATICFILES_DIRS = [static_dir]
 
 STATIC_ROOT=BASE_DIR/"staticfiles"
 
@@ -187,5 +188,3 @@ media_dir=getenv("media_dir", "media")
 media_path=BASE_DIR/media_dir
 Path(media_path).mkdir(exist_ok=True)
 MEDIA_ROOT=media_path
-
-

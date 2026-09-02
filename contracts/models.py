@@ -5,25 +5,27 @@ from django.core.validators import MinValueValidator
 from django.utils.text import slugify
 from django.db import models
 from services.models import Service
-# Create your models here.
 
-def create_contract_path(instance, filename):
-    contract_dir=settings.MEDIA_ROOT/"contracts"/slugify(instance.connection.name)/slugify(instance.name)
+def create_contract_path(instance, filename): #pylint: disable=C0116
+    contract_dir=settings.MEDIA_ROOT/"contracts"/slugify(instance.connection.name)\
+        /slugify(instance.name)
     _, end = os.path.splitext(filename)
     Path(contract_dir).mkdir(parents=True, exist_ok=True)
     contract_path=contract_dir/f"contract_{instance.start_date}{end}"
     return contract_path
 
-def uploadextrafiles(instance, filename):
+def uploadextrafiles(instance, filename): #pylint: disable=C0116
     if not instance.contract.pk:
         raise ValueError("No such a contract")
     name, end = os.path.splitext(filename)
-    contract_path=settings.MEDIA_ROOT/"contracts"/slugify(instance.contract.connection.name)/slugify(instance.contract.name)
+    contract_path=settings.MEDIA_ROOT/"contracts"/slugify(instance.contract.connection.name)\
+        /slugify(instance.contract.name)
     if Path(contract_path).exists():
         return contract_path/f"{slugify(name)}{end}"
     raise FileExistsError("No a directory for this contract")
 
 class Contract(models.Model):
+    """Contract between company and client for a service"""
     name=models.CharField(verbose_name="Name",
                           max_length=20,
                           null=False,
@@ -75,7 +77,7 @@ class Contract(models.Model):
                                  blank=True,
                                  related_name="contract_modifier")
 
-    class Meta:
+    class Meta: #pylint: disable=C0115,R0903
         permissions = [
             ("close_contract", "Can close contract"),
             ("view_contracts_list","Can view contracts list"),
@@ -90,15 +92,16 @@ class Contract(models.Model):
             self.modified_by=self.created_by
         super().save(*args,**kwargs)
 
-    def __str__(self):
+    def __str__(self): #pylint: disable=E0307
         return self.name
 
-    def get_filename(self):
+    def get_filename(self): #pylint: disable=C0116
         return Path(self.file.name).name
 
 
 
 class ExtraFilesToContract(models.Model):
+    """Extra files attached to a contract"""
     contract = models.ForeignKey(verbose_name="Contract name",
                                  to=Contract,
                                  related_name="extra_files",
@@ -108,5 +111,5 @@ class ExtraFilesToContract(models.Model):
                             null=True,
                             blank=False)
 
-    def get_filename(self):
+    def get_filename(self): #pylint: disable=C0116
         return Path(self.file.name).name

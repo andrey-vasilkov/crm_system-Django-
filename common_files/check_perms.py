@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 
 
-
 def links_and_buttons(request:HttpRequest) -> dict:
+    """provide nav links depending on user's permissions"""
     links = {
         "users.users_list_view": {"name":"users:users_list",
                                   "label": "Users list"},
@@ -38,11 +38,9 @@ def links_and_buttons(request:HttpRequest) -> dict:
     if not request.user.is_authenticated:
         return {"buttons": {}}
     if request.user.is_superuser:
-        buttons = {links[key]["label"]:links[key]["name"] for key in links}
+        buttons = {link["label"]:link["name"] for link in links.values()}
         return {"buttons":buttons}
     perms = request.user.get_all_permissions()
     buttons = {links[perm]["label"]:links[perm]["name"] for perm in perms if perm in links}
 
     return {"buttons": buttons}
-
-
