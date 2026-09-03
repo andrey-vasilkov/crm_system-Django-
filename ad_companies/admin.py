@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from ad_companies.models import Channel,AdCompany
+from ad_companies.models import AdCompany, Channel
 
 # Register your models here.
 

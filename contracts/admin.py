@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from contracts.models import Contract, ExtraFilesToContract
+
 # Register your models here.
 
 @admin.register(Contract)

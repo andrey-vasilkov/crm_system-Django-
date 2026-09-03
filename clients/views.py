@@ -2,12 +2,11 @@ from django import forms
 from django.urls import reverse_lazy
 
 # Create your views here.
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
-
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from clients.forms import ValidateCreatePotentialClient, ValidateUpdatePotentialClient
 from clients.mixins import ClientsSortAndFilter
-from clients.models import PotentialClient, ActiveClient
+from clients.models import ActiveClient, PotentialClient
 from common_files.mixins import CheckAccessMixin
 from contracts.models import Contract
 from logging_setup import logger

@@ -1,13 +1,20 @@
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Sum
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.db.models import Count, Sum
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
-from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
-from ad_companies.models import AdCompany,Channel
-from ad_companies.forms import ChannelCreateForm, AdCompanyValidateForm
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
+
+from ad_companies.forms import AdCompanyValidateForm, ChannelCreateForm
+from ad_companies.models import AdCompany, Channel
 from common_files.mixins import CheckAccessMixin, SortAndFilterMixin
 from logging_setup import logger
 

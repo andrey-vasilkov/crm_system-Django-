@@ -1,14 +1,18 @@
 from django.urls import path
-from ad_companies.views import (ChannelCreateView,
-                                ChannelsListView,
-                                ChannelDeleteView,
-                                AdCompanyCreateView,
+
+from ad_companies.views import (
                                 AdCompaniesListView,
+                                AdCompanyCreateView,
                                 AdCompanyPageView,
+                                AdCompanyStatisticView,
                                 AdCompanyUpdateView,
-                                ChangeStatusAdCompanyView,
                                 AdDeleteView,
-                                AdCompanyStatisticView)
+                                ChangeStatusAdCompanyView,
+                                ChannelCreateView,
+                                ChannelDeleteView,
+                                ChannelsListView,
+)
+
 app_name = "ads" #pylint: disable=C0103
 
 urlpatterns = [

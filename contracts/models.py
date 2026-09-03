@@ -1,10 +1,13 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from django.conf import settings
 from django.core.validators import MinValueValidator
-from django.utils.text import slugify
 from django.db import models
+from django.utils.text import slugify
+
 from services.models import Service
+
 
 def create_contract_path(instance, filename): #pylint: disable=C0116
     contract_dir=settings.MEDIA_ROOT/"contracts"/slugify(instance.connection.name)\

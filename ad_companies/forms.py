@@ -1,7 +1,7 @@
 
-from django.forms import ModelForm, ValidationError, CheckboxSelectMultiple
+from django.forms import CheckboxSelectMultiple, ModelForm, ValidationError
 
-from ad_companies.models import Channel, AdCompany
+from ad_companies.models import AdCompany, Channel
 
 
 class ChannelCreateForm(ModelForm):

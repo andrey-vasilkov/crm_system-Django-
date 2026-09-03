@@ -1,11 +1,12 @@
 from django.contrib.auth.models import Group
-from django.shortcuts import  redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
-from users.forms import MyCreationUserForm, MyUpdateUserForm
-from users.models import User
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+
 from common_files.mixins import CheckAccessMixin, CheckSuperUser, SortAndFilterMixin
 from logging_setup import logger
+from users.forms import MyCreationUserForm, MyUpdateUserForm
+from users.models import User
 
 
 class UsersListView(CheckAccessMixin, SortAndFilterMixin,ListView):

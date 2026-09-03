@@ -1,10 +1,14 @@
 
 from django.urls import path
-from clients.views import (CreatePotentialClientView,
+
+from clients.views import (
                            AllClientsListView,
                            ClientPageView,
                            ClientUpdateView,
-                           CreateActiveClientView)
+                           CreateActiveClientView,
+                           CreatePotentialClientView,
+)
+
 app_name = "clients" #pylint: disable=C0103
 
 urlpatterns = [

@@ -2,6 +2,7 @@ from django.forms import models
 
 from clients.models import PotentialClient
 
+
 class ValidateCreatePotentialClient(models.ModelForm):
     """Validate form for creating potential client"""
 

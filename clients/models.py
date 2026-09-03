@@ -5,7 +5,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from ad_companies.models import AdCompany
 from contracts.models import Contract
 
-
 # Create your models here.
 
 class PotentialClient(models.Model):

@@ -1,9 +1,6 @@
 from django.urls import path
-from user_auth.views import (AuthMainView,
-                             authlogout,
-                             AuthLoginView,
-                             UsersChangePassView)
 
+from user_auth.views import AuthLoginView, AuthMainView, UsersChangePassView, authlogout
 
 app_name = "auth" #pylint: disable=C0103
 

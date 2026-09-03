@@ -1,11 +1,17 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from services.models import Service
-from services.forms import ServiceValidateForm
-from logging_setup import logger
-from common_files.mixins import CheckAccessMixin,SortAndFilterMixin
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
+from common_files.mixins import CheckAccessMixin, SortAndFilterMixin
+from logging_setup import logger
+from services.forms import ServiceValidateForm
+from services.models import Service
 
 # Create your views here.
 

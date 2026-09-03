@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from clients.models import PotentialClient,ActiveClient
+from clients.models import ActiveClient, PotentialClient
+
 # Register your models here.
 
 @admin.register(PotentialClient)

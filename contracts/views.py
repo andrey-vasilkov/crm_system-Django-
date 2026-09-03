@@ -1,12 +1,15 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
-from contracts.forms import (ContractValidateForm, #pylint: disable=C0301
-                             ContractValidateUpdateForm,
-                             ContractUploadExtraFilesForm)
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+
+from common_files.mixins import CheckAccessMixin
+from contracts.forms import (  #pylint: disable=C0301
+    ContractUploadExtraFilesForm,
+    ContractValidateForm,
+    ContractValidateUpdateForm,
+)
 from contracts.mixins import SortAndFilterContracts
 from contracts.models import Contract, ExtraFilesToContract
-from common_files.mixins import CheckAccessMixin
 from logging_setup import logger
 
 # Create your views here.

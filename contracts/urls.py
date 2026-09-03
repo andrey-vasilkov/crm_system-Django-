@@ -1,9 +1,13 @@
 from django.urls import path
-from contracts.views import (ContractCreateView,
-                             ContractListView,
+
+from contracts.views import (
+                             CloseContractView,
+                             ContractCreateView,
                              ContractDetailView,
+                             ContractListView,
                              ContractUpdateView,
-                             CloseContractView,)
+)
+
 app_name = "contracts" #pylint: disable=C0103
 
 urlpatterns = [

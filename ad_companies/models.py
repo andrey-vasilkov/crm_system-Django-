@@ -4,7 +4,6 @@ from django.db import models
 
 from services.models import Service
 
-
 # Create your models here.
 
 class Channel(models.Model):

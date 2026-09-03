@@ -1,4 +1,5 @@
-from django.forms import ModelForm, ValidationError, DateInput
+from django.forms import DateInput, ModelForm, ValidationError
+
 from contracts.models import Contract, ExtraFilesToContract
 
 

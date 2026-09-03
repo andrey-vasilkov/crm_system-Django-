@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from services.models import Service
+
 # Register your models here.
 
 @admin.register(Service)

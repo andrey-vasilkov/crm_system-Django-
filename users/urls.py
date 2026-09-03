@@ -1,9 +1,12 @@
 from django.urls import path
-from users.views import (CreateUserView,
+
+from users.views import (
+                         ChangeStatusUserView,
+                         CreateUserView,
+                         UpdateUserView,
                          UsersListView,
                          UsersPageView,
-                         UpdateUserView,
-                         ChangeStatusUserView)
+)
 
 app_name = "users" #pylint: disable=C0103
 

@@ -1,5 +1,5 @@
-from django.core.management import BaseCommand
 from django.contrib.auth.models import Group, Permission
+from django.core.management import BaseCommand
 
 
 class Command(BaseCommand):
@@ -33,4 +33,4 @@ class Command(BaseCommand):
             group.permissions.add(*role_perms)
             self.stdout.write(f"group perms: {len(group.permissions.all())}")
 
-        self.stdout.write(f"command is finished")
+        self.stdout.write("command is finished")

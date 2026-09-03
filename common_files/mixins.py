@@ -1,9 +1,7 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.shortcuts import render
 
-
 from logging_setup import logger
-
 
 
 class CheckSuperUser(AccessMixin):

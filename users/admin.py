@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 
 from users.models import User
 
+
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
     """ Show users in admin panel"""

@@ -1,9 +1,10 @@
 from django.contrib.auth import logout
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import HttpRequest
-from django.shortcuts import  redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from django.contrib.auth.views import LoginView, PasswordChangeView
+
 from config.settings import LOGOUT_REDIRECT_URL
 
 # Create your views here.

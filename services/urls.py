@@ -1,11 +1,13 @@
 from django.urls import path
-from services.views import (ServicesListView,
-                            ServiceCreateView,
-                            ServiceProfileView,
-                            ServiceUpdateProfileView,
-                            ServiceDeleteView,
-                            ChangeStatusServiceView,)
 
+from services.views import (
+                            ChangeStatusServiceView,
+                            ServiceCreateView,
+                            ServiceDeleteView,
+                            ServiceProfileView,
+                            ServicesListView,
+                            ServiceUpdateProfileView,
+)
 
 app_name = "services" #pylint: disable=C0103
 
